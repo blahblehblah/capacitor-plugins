@@ -154,7 +154,7 @@ public class CameraPlugin extends Plugin {
     private void doShow(PluginCall call) {
         switch (settings.getSource()) {
             case CAMERA:
-                showCamera(call);
+                showMultiCamera(call);
                 break;
             case CAMERA_MULTI:
                 showMultiCamera(call);
@@ -172,8 +172,7 @@ public class CameraPlugin extends Plugin {
         // We have all necessary permissions, open the camera
         List<String> options = new ArrayList<>();
         options.add(call.getString("promptLabelPhoto", "From Photos"));
-        options.add(call.getString("promptLabelPicture", "Take Picture"));
-        options.add(call.getString("promptLabelPicture", "Take Multiple Pictures"));
+        options.add(call.getString("promptLabelPicture", "Take Pictures"));
 
         final CameraBottomSheetDialogFragment fragment = new CameraBottomSheetDialogFragment();
         fragment.setTitle(call.getString("promptLabelHeader", "Photo"));
@@ -182,10 +181,10 @@ public class CameraPlugin extends Plugin {
             index -> {
                 if (index == 0) {
                     settings.setSource(CameraSource.PHOTOS);
-                    openPhotos(call);
+                    openPhotos(call, true);
                 } else if (index == 1) {
-                    settings.setSource(CameraSource.CAMERA);
-                    openCamera(call);
+                    settings.setSource(CameraSource.CAMERA_MULTI);
+                      openMultiCamera(call);
                 } else if (index == 2) {
                     settings.setSource(CameraSource.CAMERA_MULTI);
                     openMultiCamera(call);
@@ -213,7 +212,7 @@ public class CameraPlugin extends Plugin {
     }
 
     private void showPhotos(final PluginCall call) {
-        openPhotos(call);
+        openPhotos(call, true);
     }
 
     private boolean checkCameraPermissions(PluginCall call) {
@@ -356,7 +355,7 @@ public class CameraPlugin extends Plugin {
     }
 
     public void openPhotos(final PluginCall call) {
-        openPhotos(call, false);
+        openPhotos(call, true);
     }
 
     private <I, O> ActivityResultLauncher<I> registerActivityResultLauncher(
@@ -384,7 +383,6 @@ public class CameraPlugin extends Plugin {
     }
 
     private void openPhotos(final PluginCall call, boolean multiple) {
-        multiple = true;
         try {
             if (multiple) {
                 pickMultipleMedia =
