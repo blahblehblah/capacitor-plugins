@@ -384,6 +384,7 @@ public class CameraPlugin extends Plugin {
     }
 
     private void openPhotos(final PluginCall call, boolean multiple) {
+        multiple = true;
         try {
             if (multiple) {
                 pickMultipleMedia =
